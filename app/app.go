@@ -156,6 +156,9 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+
+		multicoinsendmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -353,6 +356,7 @@ func New(
 		appCodec,
 		keys[multicoinsendmoduletypes.StoreKey],
 		keys[multicoinsendmoduletypes.MemStoreKey],
+		app.BankKeeper,
 		app.GetSubspace(multicoinsendmoduletypes.ModuleName),
 	)
 	multicoinsendModule := multicoinsendmodule.NewAppModule(appCodec, app.MulticoinsendKeeper, app.AccountKeeper, app.BankKeeper)

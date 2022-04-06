@@ -5565,6 +5565,42 @@ paths:
           type: boolean
       tags:
         - Query
+  /hupayxcom/multicoinsend/multicoinsend/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: HupayxcomMulticoinsendMulticoinsendParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /ibc/apps/transfer/v1/denom_traces:
     get:
       summary: DenomTraces queries all denomination traces.
@@ -10351,6 +10387,42 @@ definitions:
     description: >-
       MsgCreateVestingAccountResponse defines the Msg/CreateVestingAccount
       response type.
+  hupayxcom.multicoinsend.multicoinsend.MsgCoinSendResponse:
+    type: object
+    properties:
+      cntValue:
+        type: string
+      totalAmount:
+        type: string
+  hupayxcom.multicoinsend.multicoinsend.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  hupayxcom.multicoinsend.multicoinsend.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
+  hupayxcom.multicoinsend.multicoinsend.Receiver:
+    type: object
+    properties:
+      to:
+        type: string
+      amount:
+        type: array
+        items:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
   ibc.applications.transfer.v1.DenomTrace:
     type: object
     properties:
