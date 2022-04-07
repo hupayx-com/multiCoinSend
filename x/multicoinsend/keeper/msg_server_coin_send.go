@@ -15,19 +15,9 @@ func (k msgServer) CoinSend(goCtx context.Context, msg *types.MsgCoinSend) (*typ
 
 	logger := k.Logger(ctx)
 
-	totalAmount := sdk.NewCoin("stake", sdk.NewInt(0))
 	receivers := msg.Receivers
 
-	for _, receiver := range receivers {
-		totalAmount.AddAmount(receiver.Amount[0].Amount)
-	}
-
 	from, _ := sdk.AccAddressFromBech32(msg.Creator)
-
-	// 모듈로 옮겼다가
-	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, from, types.ModuleName, sdk.NewCoins(totalAmount)); err != nil {
-		return nil, err
-	}
 
 	for _, receiver := range receivers {
 
@@ -38,6 +28,11 @@ func (k msgServer) CoinSend(goCtx context.Context, msg *types.MsgCoinSend) (*typ
 			"address", receiver.To,
 		)
 
+		// 모듈로 옮기고
+		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, from, types.ModuleName, receiver.Amount); err != nil {
+			return nil, err
+		}
+
 		// 개인계좌로 옮기자
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, to, receiver.Amount); err != nil {
 			return nil, err
@@ -46,5 +41,5 @@ func (k msgServer) CoinSend(goCtx context.Context, msg *types.MsgCoinSend) (*typ
 	}
 
 	// totalAmount.Amount
-	return &types.MsgCoinSendResponse{CntValue: strconv.Itoa(len(receivers)), TotalAmount: totalAmount.Amount.String()}, nil
+	return &types.MsgCoinSendResponse{CntValue: strconv.Itoa(len(receivers)), TotalAmount: "0"}, nil
 }
